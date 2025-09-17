@@ -5,7 +5,7 @@ import seaborn as sb
 import plotly.express as px
 
 # Load dataset
-df = pd.read_csv("CARS.csv")
+df = pd.read_csv("../DataSets/CARS.csv")
 
 # Streamlit Page Config
 st.set_page_config(page_title="Car Horsepower Dashboard 🚗", layout="wide")
@@ -33,7 +33,7 @@ top_n = st.sidebar.slider("Show Top N Cars by Horsepower", min_value=5, max_valu
 sort_option = st.sidebar.radio("Sort by:", ["Model (A-Z)", "Horsepower (High → Low)", "Horsepower (Low → High)"])
 
 # Chart type
-chart_type = st.sidebar.radio("Select Chart Type", ["Bar (2D)", "Bar (3D)", "Line", "Scatter"])
+chart_type = st.sidebar.radio("Select Chart Type", ["Bar (2D)", "Bar (3D)", "Line", "Scatter", "Animated"])
 
 # Color palette
 palette_option = st.sidebar.selectbox(
@@ -75,8 +75,6 @@ elif chart_type == "Bar (3D)":
         color_continuous_scale=palette_option,
         title="3D Bar Chart of Horsepower",
     )
-    fig.update_traces(marker=dict(line=dict(width=0)))
-    fig.update_layout(scene=dict(zaxis=dict(title="Horsepower")))
     st.plotly_chart(fig, use_container_width=True)
 
 elif chart_type == "Line":
@@ -100,6 +98,19 @@ elif chart_type == "Scatter":
         color_continuous_scale=palette_option,
         title="Scatter Plot of Horsepower"
     )
+    st.plotly_chart(fig, use_container_width=True)
+
+elif chart_type == "Animated":
+    fig = px.bar(
+        df[df["Make"].isin(selected_brands)],
+        x="Model",
+        y="Horsepower",
+        color="Make",
+        animation_frame="Make",  # Animate across brands
+        range_y=[0, df["Horsepower"].max() + 50],
+        title="🎞️ Animated Car Horsepower by Brand"
+    )
+    fig.update_layout(transition={'duration': 500})
     st.plotly_chart(fig, use_container_width=True)
 
 # Data Table
