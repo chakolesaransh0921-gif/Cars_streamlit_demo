@@ -5,7 +5,7 @@ import seaborn as sb
 import plotly.express as px
 
 # Load dataset
-df = pd.read_csv("../DataSets/CARS.csv")
+df = pd.read_csv("CARS.csv")
 
 # Streamlit Page Config
 st.set_page_config(page_title="Car Horsepower Dashboard 🚗", layout="wide")
